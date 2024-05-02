@@ -1,0 +1,59 @@
+@model IEnumerable<IceSync.Models.Workflow>
+@{
+    ViewData["Title"] = "Index";
+}
+
+@section scripts {
+    <script>
+        $(function() {            
+            $(".run").on("click",function(e) {
+                e.preventDefault();
+                $.post(this.href,function(data) {                    
+                    $("#messageContent").text(data);
+                    $("#resultModal").modal("show");
+                });
+            });
+        });
+    </script>
+}
+
+<h2>Workflows</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.WorkflowId)</th>
+            <th>@Html.DisplayNameFor(model => model.WorkflowName)</th>
+            <th>@Html.DisplayNameFor(model => model.IsActive)</th>
+            <th>@Html.DisplayNameFor(model => model.IsRunning)</th>
+            <th>@Html.DisplayNameFor(model => model.MultiExecBehavior)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var workflow in Model){
+        <tr>
+            <td>@Html.DisplayFor(modelItem => workflow.WorkflowId)</td>
+            <td>@Html.DisplayFor(modelItem => workflow.WorkflowName)</td>
+            <td>@Html.DisplayFor(modelItem => workflow.IsActive)</td>
+            <td>@Html.DisplayFor(modelItem => workflow.IsRunning)</td>
+            <td>@Html.DisplayFor(modelItem => workflow.MultiExecBehavior)</td>
+            <td><a class="btn btn-link run" asp-action="Run" asp-route-id="@workflow.WorkflowId">Run</a></td>       
+        </tr>
+    }
+    </tbody>
+</table>
+
+<!-- The modal popup with the message from the run command. -->
+<div class="modal" id="resultModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p id="messageContent"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>        
+      </div>
+    </div>
+  </div>
+</div>
